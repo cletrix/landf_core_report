@@ -8,6 +8,8 @@ from tools import *
 from views.move import Move
 from views.machine import Machine
 from views.frontpage import FrontPage
+from views.form_machine import FormMachine
+from views.form_move import FormMove
 from core.manager import Manager
 import constants
 import log
@@ -18,9 +20,11 @@ from log import logger
 def make_app_tornado():
     return tornado.web.Application([
         (r"/", FrontPage),
+        (r"/maq", FormMachine),
+        (r"/mov", FormMove),
         (r"/machine", Machine),
         (r"/move", Move),
-    ])
+    ], template_path="templates")
 
 
 async def main():

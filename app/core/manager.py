@@ -1,8 +1,5 @@
 import aiomysql
-
 import constants
-
-from log import logger
 
 
 class Manager:
@@ -19,7 +16,6 @@ class Manager:
     @classmethod
     async def machine(cls, place, start_date, end_date, login):
         conn = await cls.db_poll.acquire()
-        logger.debug(f"conn: {conn}")
 
         try:
             pre_sql = f"USE {constants.db_name}"
@@ -48,7 +44,6 @@ class Manager:
     @classmethod
     async def move(cls, place, start_date, end_date, login):
         conn = await cls.db_poll.acquire()
-        logger.debug(f"conn: {conn}")
 
         try:
             pre_sql = f"USE {constants.db_name}"

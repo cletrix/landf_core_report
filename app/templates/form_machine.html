@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Machine Data</title>
+    <style>
+        /* Define a fonte base */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Container para centralizar o formulário */
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        /* Estilização dos labels */
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Estilização dos inputs */
+        input[type="text"], input[type="datetime-local"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 0; /* Remove os cantos arredondados */
+            font-size: 16px;
+        }
+
+        /* Botão de submit */
+        input[type="submit"] {
+            display: block;
+            width: calc(100% - 22px);
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0; /* Remove os cantos arredondados */
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Estilo para dispositivos móveis */
+        @media (max-width: 600px) {
+            form {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            label {
+                font-size: 14px;
+            }
+
+            input[type="text"], input[type="datetime-local"], input[type="submit"] {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form method="get" action="/machine">
+        <h2>Machine Data</h2>
+        <label for="login">Machine:</label>
+        <input type="text" id="login" name="login" value="keno_015"><br><br>
+        <label for="place">place:</label>
+        <input type="text" id="place" name="place" value="local1"><br><br>
+        <label for="start_date">Start date and dime:</label>
+        <input type="datetime-local" id="start_date" name="start_date" value="<script>document.write(new Date().toISOString().substring(0, 11) + '00:00')</script>"><br><br>
+        <label for="end_date">End date and dime:</label>
+        <input type="datetime-local" id="end_date" name="end_date" value="<script>document.write(new Date().toISOString().substring(0, 16))</script>"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
