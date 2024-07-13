@@ -1,0 +1,17 @@
+services:
+  python-app-report:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    networks:
+      - minha-rede
+    ports:
+      - "33444:33444"
+    volumes:
+      - ./app:/app
+
+networks:
+  minha-rede:
+    external: true
