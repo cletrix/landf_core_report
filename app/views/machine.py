@@ -11,9 +11,8 @@ class Machine(BaseHandler):
         place = data.get('place')
         start_date = data.get('start_date')
         end_date = data.get('end_date')
-        login = data.get('login')
 
-        if not place or not start_date or not end_date or not login:
+        if not place or not start_date or not end_date:
             self.set_status(400)
             self.write({"error": "Missing required parameters: place, start_date, end_date"})
             return
@@ -35,7 +34,7 @@ class Machine(BaseHandler):
         self.write(json.dumps(json_response))
         self.finish()
 
-# curl -X POST http://localhost:33444/machine \
+# curl -X POST http://jane.cletrix.net:33444/machine \
 #      -H "Content-Type: application/json" \
 #      -d '{
 #            "place": "local1",
