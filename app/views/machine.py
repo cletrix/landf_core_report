@@ -1,42 +1,10 @@
 from views.base_handler import BaseHandler
 import json
-import csv
-import io
+from datetime import datetime
 from core.manager import Manager
-from log import logger
 
 
 class Machine(BaseHandler):
-
-    async def get(self):
-        place = self.get_argument('place', None)
-        start_date = self.get_argument('start_date', None)
-        end_date = self.get_argument('end_date', None)
-        login = self.get_argument('login', None)
-
-        if not place or not start_date or not end_date or not login:
-            self.set_status(400)
-            self.write("Missing required parameters: place, start_date, end_date, login")
-            return
-
-        response = await Manager.machine(place, start_date, end_date, login)
-
-        headers = ['Datetime', 'Value', 'Type', 'Login', 'Location', 'ID']
-        rows = [headers] + [list(map(str, row)) for row in response]
-
-        col_widths = [max(len(str(item)) for item in col) for col in zip(*rows)]
-        separator = '+'.join('-' * (width + 2) for width in col_widths)
-
-        def format_row(row):
-            return '| ' + ' | '.join(f'{item:{width}}' for item, width in zip(row, col_widths)) + ' |'
-
-        table = [separator, format_row(headers), separator]
-        for row in rows[1:]:
-            table.append(format_row(row))
-        table.append(separator)
-
-        self.set_header('Content-Type', 'text/plain')
-        self.write('\n'.join(table))
 
     async def post(self):
         data = json.loads(self.request.body)
@@ -47,22 +15,30 @@ class Machine(BaseHandler):
 
         if not place or not start_date or not end_date or not login:
             self.set_status(400)
-            self.write("Missing required parameters: place, start_date, end_date, login")
+            self.write({"error": "Missing required parameters: place, start_date, end_date"})
             return
 
-        response = await Manager.machine(place, start_date, end_date, login)
+        response = await Manager.machine(place, start_date, end_date)
 
-        output = io.StringIO()
-        writer = csv.writer(output)
-
-        writer.writerow(['Datetime', 'Value', 'Type', 'Login', 'Location', 'ID'])
+        json_response = []
         for row in response:
-            writer.writerow(row)
+            json_response.append({
+                'Datetime': row[0].isoformat() if isinstance(row[0], datetime) else row[0],
+                'Value': row[1],
+                'Type': row[2],
+                'Login': row[3],
+                'Location': row[4],
+                'ID': row[5]
+            })
 
-        csv_data = output.getvalue()
-        output.close()
-
-        self.set_header('Content-Type', 'text/csv')
-        self.set_header('Content-Disposition', 'attachment; filename=machine_report.csv')
-        self.write(csv_data)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(json_response))
         self.finish()
+
+# curl -X POST http://localhost:33444/machine \
+#      -H "Content-Type: application/json" \
+#      -d '{
+#            "place": "local1",
+#            "start_date": "2024-01-01",
+#            "end_date": "2024-12-31"
+#          }'
